@@ -17,7 +17,7 @@ public:
     {
         if (GameController::event.type == SDL_KEYDOWN /*&& GameController::event.key.repeat == 0*/)
         {
-            std::cout << "KeyDown : " << GameController::event.key.keysym.sym << std::endl;
+            //std::cout << "KeyDown : " << GameController::event.key.keysym.sym << std::endl;
             switch (GameController::event.key.keysym.sym)
             {
             case SDLK_w:
@@ -39,7 +39,7 @@ public:
 
         if (GameController::event.type == SDL_KEYUP)
         {
-            std::cout << "KeyUP : " << GameController::event.key.keysym.sym << std::endl;
+            //std::cout << "KeyUP : " << GameController::event.key.keysym.sym << std::endl;
             switch (GameController::event.key.keysym.sym)
             {
             case SDLK_w:

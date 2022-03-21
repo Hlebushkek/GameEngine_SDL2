@@ -1,60 +1,38 @@
 #include "TileMap.h"
+#include "GameController.h"
+#include "Components.h"
+#include <fstream>
 
-TileMap::TileMap(int arr[mapRow][mapColumn])
-{
-    name_texture_map.insert(std::pair<const char*, SDL_Texture*>("dirt", IMG_LoadTexture(GameController::renderer, "img/Block1.png")));
-    name_texture_map.insert(std::pair<const char*, SDL_Texture*>("stone", IMG_LoadTexture(GameController::renderer, "img/Block1.png")));
-    name_texture_map.insert(std::pair<const char*, SDL_Texture*>("water", IMG_LoadTexture(GameController::renderer, "img/Block1.png")));
+extern Manager manager;
 
-    LoadMap(arr);
-
-    srcRect.x = srcRect.y = destRect.x = destRect.y = 0;
-    srcRect.w = srcRect.h = destRect.w = destRect.h = 32;
-}
+TileMap::TileMap()
+{}
 TileMap::~TileMap()
 {
-    for (const auto& elem : name_texture_map) {
-        SDL_DestroyTexture(elem.second);
-    }
-    name_texture_map.clear();
+    tiles.clear();
 }
 
-void TileMap::LoadMap(int arr[mapRow][mapColumn])
+void TileMap::LoadMap(const char* path, int sizeX, int sizeY, int tileScale)
 {
-    for (int row = 0; row < mapRow; row++)
+    int tileID;
+    std::fstream mapFile;
+    mapFile.open(path);
+
+    for (int y = 0; y < sizeY; y++)
     {
-        for (int column = 0; column < mapColumn; column++)
+        for (int x = 0; x < sizeX; x++)
         {
-            map[row][column] = arr[row][column];
+            mapFile >> tileID;
+            AddTile(x * 32 * tileScale, y * 32 * tileScale, tileScale, tileID);
         }
     }
+
+    mapFile.close();
 }
-
-void TileMap::DrawMap()
+void TileMap::AddTile(int x, int y, int scale, int id)
 {
-    int type = 0;
-
-    for (int row = 0; row < mapRow; row++)
-    {
-        for (int column = 0; column < mapColumn; column++)
-        {
-            type = map[row][column];
-
-            destRect.x = column * 32;
-            destRect.y = row * 32;
-
-            switch (type)
-            {
-            case 0:
-                SDL_RenderCopy(GameController::renderer, name_texture_map["dirt"], &srcRect, &destRect);
-                break;
-            case 1:
-                SDL_RenderCopy(GameController::renderer, name_texture_map["stone"], &srcRect, &destRect);
-                break;
-            case 2:
-                SDL_RenderCopy(GameController::renderer, name_texture_map["water"], &srcRect, &destRect);
-                break;
-            }
-        }
-    }
+    auto& tile(manager.addEntity());
+    tile.addComponent<TileComponent>(x, y, 32, 32, scale, id);
+    tile.addGroup(GameController::groupMap);
+    tiles.push_back(&tile);
 }

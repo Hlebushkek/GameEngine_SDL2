@@ -64,6 +64,13 @@
         "__bits": "cpp",
         "map": "cpp",
         "__tree": "cpp",
-        "__availability": "cpp"
+        "__availability": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "deque": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "stack": "cpp",
+        "variant": "cpp"
     }
 }

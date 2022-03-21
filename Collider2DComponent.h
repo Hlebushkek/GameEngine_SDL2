@@ -23,6 +23,8 @@ public:
             entity->addComponent<TransformComponent>();
         }
         transform = &entity->getComponent<TransformComponent>();
+
+        GameController::colliders.push_back(this);
     }
 
     void fixedupdate() override
@@ -32,7 +34,4 @@ public:
         collider.w = transform->width * transform->scale;
         collider.h = transform->height * transform->scale;
     }
-
-private:
-
 };

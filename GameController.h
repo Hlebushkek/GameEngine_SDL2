@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 
 class GameController
 {
@@ -27,5 +28,14 @@ public:
 
     static SDL_Renderer* renderer;
     static SDL_Event event;
+    static std::vector<class Collider2DComponent*> colliders;
+
+    enum groupLabels : std::size_t
+    {
+        groupMap,
+        groupPlayers,
+        groupEnemies,
+        groupColliders
+    };
 };
 #endif

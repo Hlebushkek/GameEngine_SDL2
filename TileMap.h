@@ -1,22 +1,15 @@
 #pragma once
-#include "GameController.h"
-#include <map>
-
-#define mapRow 20
-#define mapColumn 25
+#include <SDL2/SDL.h>
+#include <vector>
 
 class TileMap
 {
 public:
-    TileMap(int arr[mapRow][mapColumn]);
+    TileMap();
     ~TileMap();
 
-    void LoadMap(int arr[mapRow][mapColumn]);
-    void DrawMap();
-
+    void LoadMap(const char* path, int sizeX, int sizeY, int tileScale);
+    void AddTile(int x, int y, int scale, int id);
 private:
-    SDL_Rect srcRect, destRect;
-
-    std::map<const char*, SDL_Texture*> name_texture_map;
-    int map[mapRow][mapColumn];
+    std::vector<class Entity*> tiles;
 };

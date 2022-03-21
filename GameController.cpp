@@ -5,40 +5,19 @@
 #include "Vector2D.h"
 #include "Collision.h"
 
-int arr[20][25] =
-{
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
-};
 TileMap* tileMap;
 SDL_Event GameController::event;
 SDL_Renderer* GameController::renderer = nullptr;
+std::vector<Collider2DComponent*> GameController::colliders;
 
 Manager manager;
 auto& newPlayer(manager.addEntity());
 auto& wall(manager.addEntity());
 
-
-GameController::GameController(){}
-GameController::~GameController(){}
+GameController::GameController()
+{}
+GameController::~GameController()
+{}
 
 void GameController::init(const char* title, int x, int y, int width, int height, bool fullscreen)
 {
@@ -66,16 +45,19 @@ void GameController::init(const char* title, int x, int y, int width, int height
             std::cout << "Renderer created" << std::endl;
         }
 
-        tileMap = new TileMap(arr);
+        tileMap = new TileMap();
+        tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/level1.map", 25, 20, 2);
 
         newPlayer.addComponent<TransformComponent>(120, 120);
         newPlayer.addComponent<SpriteComponent>("img/Block1.png");
         newPlayer.addComponent<KeyboardControllerComponent>();
         newPlayer.addComponent<Collider2DComponent>("player");
+        newPlayer.addGroup(groupPlayers);
 
         wall.addComponent<TransformComponent>(300, 300, 128, 32, 1);
         wall.addComponent<SpriteComponent>("img/Block1.png");
         wall.addComponent<Collider2DComponent>("wall");
+        wall.addGroup(groupMap);
 
         isRunning = true;
     } else {isRunning = false;}
@@ -108,20 +90,24 @@ void GameController::FixedUpdate()
     manager.refresh();
     manager.fixedupdate();
 
-    if (Collision::AABB(newPlayer.getComponent<Collider2DComponent>().collider, wall.getComponent<Collider2DComponent>().collider))
+    for (auto cc : colliders)
     {
-        newPlayer.getComponent<TransformComponent>().velocity * -1;
-        std::cout << "Player overlap wall" << std::endl;
+        Collision::AABB(newPlayer.getComponent<Collider2DComponent>(), *cc);
     }
 }
+
+auto& tiles(manager.getGroup(GameController::groupMap));
+auto& players(manager.getGroup(GameController::groupPlayers));
+auto& enemies(manager.getGroup(GameController::groupEnemies));
 
 void GameController::Render()
 {
     SDL_RenderClear(renderer);
-    //to render
-    tileMap->DrawMap();
-    manager.draw();
-    //
+    
+    for (auto& t : tiles) t->draw();
+    for (auto& p : players) p->draw();
+    for (auto& e : enemies) e->draw();
+
     SDL_RenderPresent(renderer);
 }
 void GameController::Clean()
