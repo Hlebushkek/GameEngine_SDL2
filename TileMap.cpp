@@ -23,7 +23,7 @@ void TileMap::LoadMap(const char* path, int sizeX, int sizeY, int tileScale)
         for (int x = 0; x < sizeX; x++)
         {
             mapFile >> tileID;
-            AddTile(x * 32 * tileScale, y * 32 * tileScale, tileScale, tileID);
+            AddTile(x * 16 * tileScale, y * 16 * tileScale, tileScale, tileID);
         }
     }
 
@@ -32,7 +32,7 @@ void TileMap::LoadMap(const char* path, int sizeX, int sizeY, int tileScale)
 void TileMap::AddTile(int x, int y, int scale, int id)
 {
     auto& tile(manager.addEntity());
-    tile.addComponent<TileComponent>(x, y, 32, 32, scale, id);
+    tile.addComponent<TileComponent>(x, y, 16, 16, scale, id);
     tile.addGroup(GameController::groupMap);
     tiles.push_back(&tile);
 }

@@ -24,7 +24,7 @@ public:
         scale = sc;
         tileID = id;
 
-        path = "img/tile" + std::to_string(id) + ".png";
+        path = "img/Map_Background/tile" + std::to_string(id) + ".png";
     }
 
     void init() override
