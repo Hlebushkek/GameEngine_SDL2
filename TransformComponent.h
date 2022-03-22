@@ -12,7 +12,7 @@ public:
     int width = 32;
     int scale = 1;
 
-    int speed = 3;
+    int speed = 6;
 
     TransformComponent()
     {
@@ -22,12 +22,12 @@ public:
     {
         setPosition(x, y);
     }
-    TransformComponent(float x, float y, int w, int h, int scale)
+    TransformComponent(float x, float y, int w, int h, int sc)
     {
         setPosition(x, y);
         width = w;
         height = h;
-        scale = scale;
+        scale = sc;
     }
     TransformComponent(Vector2D pos)
     {

@@ -19,8 +19,8 @@ public:
     {
         tileRect.x = x;
         tileRect.y = y;
-        tileRect.w = w * sc;
-        tileRect.h = h * sc;
+        tileRect.w = w;
+        tileRect.h = h;
         scale = sc;
         tileID = id;
         
