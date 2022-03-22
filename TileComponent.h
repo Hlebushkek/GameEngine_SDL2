@@ -15,7 +15,7 @@ public:
     std::string path;
 
     TileComponent() = default;
-    TileComponent(int x, int y, int w, int h, int sc, int id)
+    TileComponent(std::string p, int x, int y, int w, int h, int sc, int id)
     {
         tileRect.x = x;
         tileRect.y = y;
@@ -23,8 +23,11 @@ public:
         tileRect.h = h * sc;
         scale = sc;
         tileID = id;
-
-        path = "img/Map_Background/tile" + std::to_string(id) + ".png";
+        
+        path = p;
+        path += "tile";
+        path += std::to_string(id);
+        path += ".png";
     }
 
     void init() override

@@ -46,7 +46,9 @@ void GameController::init(const char* title, int x, int y, int width, int height
         }
 
         tileMap = new TileMap();
-        tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/Level1_Back.map", 50, 40, 3);
+        tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/Level1_Back.map", TileMap::Background, 50, 40, 3);
+        tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/Level1_Passages.map", TileMap::Passages, 50, 40, 3);
+        tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/Level1_Walls.map", TileMap::Walls, 50, 40, 3);
 
         newPlayer.addComponent<TransformComponent>(120, 120);
         newPlayer.addComponent<SpriteComponent>("img/Block1.png");
