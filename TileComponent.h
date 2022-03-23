@@ -7,9 +7,9 @@ class TileComponent : public Component
 {
 public:
     TransformComponent* transform;
-    SpriteComponent* sprite;
+    SDL_Texture* texture;
+    SDL_Rect srcRect, destRect;
 
-    SDL_Rect tileRect;
     int scale;
     std::string tileID;
     std::string path;
@@ -17,25 +17,31 @@ public:
     TileComponent() = default;
     TileComponent(std::string p, int x, int y, int w, int h, int sc, int id)
     {
-        tileRect.x = x;
-        tileRect.y = y;
-        tileRect.w = w;
-        tileRect.h = h;
+        srcRect.x = srcRect.y = 0;
+        srcRect.w = w;
+        srcRect.h = h;
         scale = sc;
         tileID = id;
+
+        destRect.x = x;
+        destRect.y = y;
+        destRect.w = w * sc;
+        destRect.h = h * sc;
         
         path = p;
         path += "tile";
         path += std::to_string(id);
         path += ".png";
+        
+        texture = IMG_LoadTexture(GameController::renderer, path.c_str());
+    }
+    ~TileComponent()
+    {
+        SDL_DestroyTexture(texture);
     }
 
-    void init() override
+    void draw() override
     {
-        entity->addComponent<TransformComponent>(tileRect.x, tileRect.y, tileRect.w, tileRect.h, scale);
-        transform = &entity->getComponent<TransformComponent>();
-
-        entity->addComponent<SpriteComponent>(path.c_str());
-        sprite = &entity->getComponent<SpriteComponent>();
+        SDL_RenderCopy(GameController::renderer, texture, &srcRect, &destRect);
     }
 };

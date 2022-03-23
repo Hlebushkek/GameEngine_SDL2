@@ -35,7 +35,7 @@ public:
         {
             animations.emplace(anim);
         }
-        Play(animations.begin()->first);
+        PlayAnimation(animations.begin()->first);
 
         setTexture(path);
     }
@@ -78,7 +78,7 @@ public:
         SDL_RenderCopy(GameController::renderer, texture, &srcRect, &destRect);
     }
 
-    void Play(const char* animName)
+    void PlayAnimation(const char* animName)
     {
         frames = animations[animName].frames;
         animIndex = animations[animName].index;
