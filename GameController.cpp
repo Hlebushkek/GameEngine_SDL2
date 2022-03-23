@@ -51,7 +51,11 @@ void GameController::init(const char* title, int x, int y, int width, int height
         tileMap->LoadMap("/Users/glebsobolevsky/Documents/GameEngine_SDL2/img/Level1_Walls.map", TileMap::Walls, 50, 40, 3);
 
         newPlayer.addComponent<TransformComponent>(120, 120, 21, 48, 3);
-        newPlayer.addComponent<SpriteComponent>("img/Player.png");
+
+        std::vector<std::pair<const char*, Animation>> anims;
+        anims.push_back(std::make_pair("Idle", Animation(0, 4, 100)));
+        newPlayer.addComponent<SpriteComponent>("img/Player1.png", anims);
+        
         newPlayer.addComponent<KeyboardControllerComponent>();
         newPlayer.addComponent<Collider2DComponent>("player");
         newPlayer.addGroup(groupPlayers);
